@@ -1,75 +1,412 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
+/* ======================================================
+   style.css — Feuille de style principale EasyPay
+   ======================================================
+   Structure :
+     1. Reset & Base
+     2. Container & Card
+     3. En-tête de carte (card-header)
+     4. Corps du formulaire (form-body)
+     5. Groupes d'inputs (input-group)
+     6. Ligne double : montant + devise (row-inputs)
+     7. Bloc canaux de paiement (channels-info)
+     8. Bouton de génération (generateButton)
+     9. Conteneur bouton SDK EasyPay (#ecom-easypay)
+    10. Pages de résultat (success / error / cancel)
+    11. Tableau de détails de transaction
+    12. Badges de statut
+    13. Bouton de retour (btn-back)
+    14. Responsive (mobile)
+   ====================================================== */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    background:#f4f7fc;
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    /* Fond dégradé sombre pour toutes les pages */
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
-.container{
-    width:100%;
-    max-width:700px;
-    padding:20px;
+.container {
+    width: 100%;
+    max-width: 520px;
 }
 
-.card{
-    background:#fff;
-    padding:30px;
-    border-radius:15px;
-    box-shadow:0 0 20px rgba(0,0,0,.1);
+.card {
+    background: #ffffff;
+    border-radius: 20px;
+    /* Ombre portée prononcée pour l'effet "floating" */
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+    /* masque les coins arrondis sur les enfants */
 }
 
-h1{
-    text-align:center;
-    margin-bottom:10px;
+/*3. En-tête de la carte (card-header)*/
+.card-header {
+    background: linear-gradient(135deg, #0070C9, #42A1EC);
+    padding: 28px 30px 22px;
+    text-align: center;
+    color: #fff;
 }
 
-p{
-    text-align:center;
-    margin-bottom:20px;
+/* Wrapper du logo : icône + titre alignés horizontalement */
+.logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 6px;
 }
 
-label{
-    display:block;
-    margin-top:15px;
-    margin-bottom:5px;
+.card-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+    text-align: center;
+    margin: 0;
 }
 
+.card-header p {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    /* légèrement transparent pour hiérarchie visuelle */
+    margin: 0;
+    text-align: center;
+}
+
+/*4. Corps du formulaire (form-body) Padding interne pour espacer les champs du bord.*/
+.form-body {
+    padding: 28px 30px;
+}
+
+/*5. Groupes d'inputs (input-group) Chaque groupe contient un label + un champ.Marge inférieure pour espacer les groupes entre eux.*/
+.input-group {
+    margin-bottom: 16px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+}
+
+/* Styles communs à tous les champs de saisie */
 input,
-textarea{
-    width:100%;
-    padding:12px;
-    border:1px solid #ccc;
-    border-radius:8px;
+textarea,
+select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #dde3ec;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #333;
+    background: #f9fafc;
+    /* Transition douce sur le focus */
+    transition: border-color 0.25s, box-shadow 0.25s;
+    outline: none;
 }
 
-textarea{
-    height:100px;
+/* Effet de focus : contour bleu EasyPay */
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #0070C9;
+    box-shadow: 0 0 0 3px rgba(0, 112, 201, 0.12);
+    background: #fff;
 }
 
-button{
-    width:100%;
-    margin-top:20px;
-    padding:15px;
-    border:none;
-    background:#0070C9;
-    color:white;
-    border-radius:8px;
-    cursor:pointer;
+/* Champ en lecture seule (référence commande) : fond grisé */
+.readonly-input {
+    background: #eef2f7;
+    color: #777;
+    cursor: default;
 }
 
-button:hover{
-    opacity:.9;
+textarea {
+    height: 90px;
+    resize: vertical;
+    /* l'utilisateur peut agrandir verticalement */
 }
 
-#ecom-easypay{
-    margin-top:20px;
-    text-align:center;
+/* 6. Ligne double : montant + devise (row-inputs)Les deux champs s'affichent côte à côte sur la même ligne. */
+.row-inputs {
+    display: flex;
+    gap: 14px;
+    /* espace entre les deux champs */
+}
+
+/* Chaque enfant prend la même largeur */
+.row-inputs .input-group {
+    flex: 1;
+}
+
+/* 7. Bloc canaux de paiement (channels-info) Affiche les moyens de paiement acceptés sous forme de tags*/
+.channels-info {
+    background: #f0f6ff;
+    border: 1.5px solid #d0e4f7;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+}
+
+/* Titre du bloc en majuscules bleues */
+.channels-title {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #0070C9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+/* Conteneur des tags avec retour à la ligne automatique */
+.channels-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Chaque tag de canal de paiement */
+.channels-list span {
+    background: #fff;
+    border: 1px solid #c5ddf5;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    color: #333;
+}
+
+/* 8. Bouton de génération (generateButton) Bouton principal pleine largeur avec dégradé EasyPay. Effet de lévitation au survol */
+button#generateButton {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #0070C9, #42A1EC);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    /* Animation douce au survol */
+    transition: transform 0.18s, box-shadow 0.18s;
+    margin-bottom: 0;
+}
+
+button#generateButton:hover {
+    transform: translateY(-2px);
+    /* légère élévation */
+    box-shadow: 0 8px 24px rgba(0, 112, 201, 0.35);
+}
+
+button#generateButton:active {
+    transform: translateY(0);
+    /* retour à la position initiale au clic */
+}
+
+#ecom-easypay {
+    margin-top: 16px;
+    text-align: center;
+}
+
+/* Override ciblé : le bouton SDK ne doit pas être pleine largeur */
+#ecom-easypay button {
+    width: auto !important;
+    /* annule le width:100% du style global */
+    display: inline-block;
+    margin-top: 0;
+    border-radius: 4px;
+}
+
+
+/* 10. Pages de résultat (success / error / cancel) */
+.result-card {
+    text-align: center;
+    padding: 50px 40px;
+}
+
+/* Icône SVG animée à l'entrée de la page */
+.result-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+    animation: bounceIn 0.6s ease;
+    /* animation d'apparition */
+}
+
+.result-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke-width: 1.8;
+}
+
+/* Couleurs des icônes SVG selon le type de résultat */
+.success-icon svg {
+    stroke: #1a7a3f;
+}
+
+/* vert */
+.error-icon svg {
+    stroke: #c0392b;
+}
+
+/* rouge */
+.cancel-icon svg {
+    stroke: #e67e22;
+}
+
+/* orange */
+
+/* Animation d'apparition rebondissante */
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.result-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* Couleur du titre selon le résultat */
+.success-card .result-title {
+    color: #1a7a3f;
+}
+
+.error-card .result-title {
+    color: #c0392b;
+}
+
+.cancel-card .result-title {
+    color: #e67e22;
+}
+
+.result-subtitle {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 28px;
+}
+
+.transaction-details {
+    background: #f8f9fc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 28px;
+    text-align: left;
+}
+
+/* Sous-titre du tableau en majuscules grises */
+.transaction-details h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #888;
+    margin-bottom: 14px;
+}
+
+.transaction-details table {
+    width: 100%;
+    border-collapse: collapse;
+    /* supprime les espaces entre les cellules */
+}
+
+.transaction-details td {
+    padding: 8px 6px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #eee;
+    color: #444;
+}
+
+/* Colonne de gauche : labels grisés */
+.transaction-details td:first-child {
+    color: #888;
+    width: 55%;
+}
+
+/*12. Badges de statut Pastilles colorées affichant SUCCESS / FAILED / CANCELLED */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.badge-success {
+    background: #d4edda;
+    color: #1a7a3f;
+}
+
+/* fond vert clair */
+.badge-error {
+    background: #f8d7da;
+    color: #c0392b;
+}
+
+/* fond rouge clair */
+.badge-cancel {
+    background: #fdebd0;
+    color: #e67e22;
+}
+
+/* 13. Bouton de retour (btn-back) Lien stylé en bouton bleu sur les pages de résultat.*/
+.btn-back {
+    display: inline-block;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #0070C9, #42A1EC);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 0.18s, box-shadow 0.18s;
+}
+
+.btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 112, 201, 0.3);
+}
+
+
+/*14. Responsive (mobile)*/
+@media (max-width: 480px) {
+    .form-body {
+        padding: 20px;
+    }
+
+    .row-inputs {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    /* empilement vertical */
+    .result-card {
+        padding: 36px 20px;
+    }
 }

@@ -1,0 +1,1 @@
+[2026-06-18 13:21:29] {"transaction":{"order_ref":"TEST001","reference":"REF001"},"payment":{"channel":"mobile_money","status":"SUCCESS","reference":"PAY001"}}
