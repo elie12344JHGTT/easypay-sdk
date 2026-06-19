@@ -166,7 +166,7 @@ document.getElementById("generateButton").addEventListener("click", function () 
     const api_keys = {
         publishable_key: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjI3MzgwNjksImp0aSI6Im9tdUFMcWc1UFNMS3daekRscEFxcWxJbmQ5eVJVRnhacUZRUXFPbWlsbFE9IiwiaXNzIjoiZUNvbVNBUy1TZWN1cmVkU2VydmVyIiwibmJmIjoxNzYyNzM4MDc5LCJleHAiOjE3NjI3NDUyNzksImRhdGEiOnsidXNlcklkIjoxODMxM319.-gSjHQjARH2fEUTrS6Vx4dl4-HAt9ek8Bh4owTb9Hrk",
         correlation_id: "Y05BeXZ4MEk0NThLM3cwNFA3aW9hclhiL2VyQWdkKzB2SklqZjNIYkNGMGhLV0hLSWJiUTZTdz0=",
-        mode: "sandbox" // "sandbox" pour les tests, "v1" pour la production
+        mode: "v1" // "sandbox" pour les tests, "v1" pour la production
     };
 
     // --- Etape 3 : Construction de l'objet commande (order) ---
